@@ -1,0 +1,3403 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+   <title>일본어 단어 암기</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            height: 100vh;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            background: #121212;
+            color: #f5f5f5;
+            font-family: Arial, sans-serif;
+        }
+
+        .screen {
+            width: 100%;
+            max-width: 800px;
+            text-align: center;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+
+        #mainScreen h1 {
+            font-size: 40px;
+            margin-bottom: 50px;
+        }
+
+        .main-buttons {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 48px;
+        }
+
+        .main-buttons button {
+           width: 40px;
+           height: 80px;
+           padding: 0;
+        }
+
+        #quizWord,
+        #studyWord {
+            font-size: 100px;
+            font-weight: bold;
+
+            width: 100%;
+            height: 140px;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            margin: 0;
+        }
+
+
+        #quizHint {
+            font-size: 35px;
+
+            width: 100%;
+            height: 50px;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            margin: 20px 0 10px;
+        }
+
+        #quizMeaning {
+            font-size: 30px;
+            color: #f5f5f5;
+
+            width: 100%;
+            height: 40px;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            margin: 0;
+        }
+
+        #checkedScreen h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+
+        #checkedCount {
+            font-size: 18px;
+            color: #f5f5f5;
+            margin-bottom: 25px;
+        }
+
+        #checkedList {
+            width: 100%;
+            max-height: 55vh;
+            overflow-y: auto;
+            text-align: left;
+            padding: 0 20px;
+        }
+
+        .checked-item {
+            display: flex;
+            align-items: baseline;
+            gap: 18px;
+            padding: 12px 5px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .checked-kanji {
+            font-size: 30px;
+            font-weight: bold;
+            min-width: 110px;
+        }
+
+        .checked-reading {
+            font-size: 18px;
+            color: #f5f5f5;
+            min-width: 110px;
+        }
+
+        .checked-meaning {
+            font-size: 18px;
+        }
+
+    #wordList {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        width: 100%;
+        min-height: 600px;
+        align-content: start;
+    }
+
+    .word-list-item {
+        border: 1px solid #f5f5f5;
+        padding: 12px;
+        text-align: center;
+    }
+
+    .word-list-kanji {
+        font-size: 24px;
+    }
+
+    .word-list-reading {
+        font-size: 14px;
+        margin-top: 5px;
+    }
+
+    .word-list-meaning {
+        font-size: 14px;
+        margin-top: 5px;
+    }
+
+    button {
+    padding: 8px 14px;
+    font-size: 18px;
+
+    border: none;
+    border-radius: 0;
+
+    background: transparent;
+    color: inherit;
+
+    cursor: pointer;
+}
+
+button:hover {
+    opacity: 0.4;
+}
+
+        .bookmark-button:hover {
+            color: #f5f5f5;
+            border-color: #f5f5f5;
+            background: #121212;
+        }
+
+        .delete-check-button {
+            margin-left: auto;
+            padding: 7px 12px;
+            font-size: 14px;
+            background: #121212;
+            color: #f5f5f5;
+        }
+
+        .delete-check-button:hover {
+            background: #f5f5f5;
+            color: #121212;
+        }
+
+
+        .quiz-buttons {
+            height: 60px;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+
+.study-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 18px;
+    margin-top: 15px;
+}
+
+.study-buttons button {
+    width: 42px;
+    height: 42px;
+    padding: 0;
+
+    border: none;
+    background: transparent;
+    color: inherit;
+
+    font-size: 22px;
+    cursor: pointer;
+}
+
+.study-buttons button:hover {
+    opacity: 0.5;
+}
+
+.study-buttons button,
+.study-bottom-buttons button {
+    border: none;
+    background: none;
+    color: inherit;
+    box-shadow: none;
+}
+
+.study-buttons button:hover,
+.study-bottom-buttons button:hover {
+    opacity: 0.4;
+}
+
+        .word-list-buttons {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+#wordListPage {
+    min-width: 60px;
+}
+        .home-button {
+            margin-top: 60px;
+
+            background: #121212;
+        }
+
+
+#studyScreen {
+    position: relative;
+    text-align: center;
+    padding-top: 30px;
+}
+
+.study-word-area {
+    position: relative;
+
+    width: 100%;
+    max-width: 700px;
+
+    height: 140px;
+    margin: 40px auto 10px;
+}
+
+#studyWord {
+    position: absolute;
+
+    left: 50%;
+    top: 50%;
+
+    transform: translate(-50%, -50%);
+
+    width: 400px;
+
+    font-size: 98px;
+    font-weight: 600;
+    line-height: 1.2;
+
+    text-align: center;
+}
+
+.study-prev {
+    position: absolute;
+    left: 0;
+    top: 50%;
+}
+
+.study-next {
+    position: absolute;
+    right: 0;
+    top: 50%;
+}
+
+.bookmark-button {
+    position: absolute;
+
+    top: -10px;
+    right: 100px;
+
+    width: 32px;
+    height: 32px;
+
+    padding: 0;
+
+    border: none;
+    background: none;
+
+    font-size: 24px;
+    line-height: 1;
+
+    cursor: pointer;
+}
+
+.bookmark-button.active {
+    font-size: 24px;
+}
+
+#studyReading {
+    height: 32px;
+    margin-top: 10px;
+
+    font-size: 25px;
+    line-height: 1.4;
+}
+
+#studyMeaning {
+    height: 32px;
+    margin-top: 2px;
+
+    font-size: 20px;
+    line-height: 1.4;
+}
+
+#studyCount {
+    margin-top: 12px;
+    margin-bottom: 22px;
+
+    font-size: 15px;
+}
+
+.study-bottom-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 18px;
+    margin-top: -45px;
+}
+
+.study-bottom-buttons button {
+    width: 42px;
+    height: 42px;
+    min-width: 42px;
+
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: inherit;
+
+    font-size: 22px;
+    cursor: pointer;
+}
+
+.study-bottom-buttons button:hover {
+    opacity: 0.5;
+}
+
+@media (max-width: 600px) {
+
+    body {
+        width: 100%;
+        min-height: 100vh;
+        height: auto;
+
+        padding: 20px 12px;
+
+        align-items: flex-start;
+    }
+
+    .screen {
+        width: 100%;
+        max-width: none;
+    }
+
+
+    #mainScreen h1 {
+        font-size: 32px;
+        margin-top: 60px;
+        margin-bottom: 40px;
+    }
+
+    .main-buttons {
+        gap: 12px;
+    }
+
+    .main-buttons button {
+        width: 140px;
+        height: 80px;
+        font-size: 24px;
+    }
+
+
+    .study-word-area {
+        width: 100%;
+        max-width: none;
+
+        height: 120px;
+
+        margin-top: 40px;
+    }
+
+    #studyWord {
+        width: 220px;
+
+        font-size: 48px;
+        line-height: 1.2;
+
+        word-break: keep-all;
+    }
+
+    .study-nav {
+        width: 44px;
+        height: 44px;
+
+        font-size: 30px;
+    }
+
+    .study-prev {
+        margin-right: 8px;
+    }
+
+    .study-next {
+        margin-left: 8px;
+    }
+
+    .bookmark-button {
+        top: -8px;
+        right: 10px;
+
+        font-size: 22px;
+    }
+
+    #studyReading {
+        height: 32px;
+        font-size: 22px;
+    }
+
+    #studyMeaning {
+        height: 32px;
+        font-size: 18px;
+    }
+
+    #studyCount {
+        margin-top: 8px;
+        margin-bottom: 15px;
+    }
+
+    .study-buttons {
+        flex-wrap: wrap;
+        gap: 8px;
+
+        margin: 8px 0;
+    }
+
+    .study-buttons button {
+        min-width: 80px;
+        height: 40px;
+
+        padding: 0 14px;
+        font-size: 15px;
+    }
+
+    #studyAnswerToggle {
+        min-width: 110px;
+    }
+
+    .study-bottom-buttons {
+        margin-top: 20px;
+    }
+
+    .study-bottom-buttons button {
+        min-width: 85px;
+        height: 40px;
+    }
+
+
+    #groupScreen h1 {
+        font-size: 30px;
+    }
+
+
+    #wordListScreen h1 {
+        font-size: 30px;
+    }
+
+    .word-list-item {
+        width: 100%;
+    }
+}
+
+    </style>
+</head>
+
+<body>
+
+
+<div id="mainScreen" class="screen">
+
+    <h1>일본어 단어 암기</h1>
+
+    <div class="main-buttons">
+
+ <button onclick="openGroupSelect('study')">
+    학습
+    </button>
+
+    </div>
+
+</div>
+
+
+<div id="groupScreen" class="screen hidden">
+    <h1 id="groupTitle">그룹 선택</h1>
+
+    <div class="main-buttons">
+        <button onclick="selectGroup('한자읽기')">한자읽기</button>
+        <button onclick="selectGroup('한자표기')">한자표기</button>
+        <button onclick="selectGroup('단어형성')">단어형성</button>
+        <button onclick="selectGroup('문맥규정')">문맥규정</button>
+        <button onclick="selectGroup('유의표현')">유의표현</button>
+        <button onclick="selectGroup('용법')">용법</button>
+        <button onclick="selectGroup('ALL')">∞</button>
+    </div>
+
+    <button class="home-button" onclick="goHome()">
+        ⌂
+    </button>
+</div>
+
+<div id="wordListScreen" class="screen hidden">
+
+    <h1 id="wordListTitle">≡</h1>
+
+    <div id="wordList"></div>
+
+    <div class="word-list-buttons">
+        <button onclick="prevWordList()">≪</button>
+
+        <div id="wordListPage">1 / 1</div>
+
+        <button onclick="nextWordList()">≫</button>
+    </div>
+
+<button class="home-button" onclick="returnToStudy()">
+    ☜
+</button>
+
+<button class="home-button" onclick="goHome()">
+    ⌂
+</button>
+
+</div>
+
+
+<div id="quizScreen" class="screen hidden">
+
+    <div id="quizWord">
+        -
+    </div>
+
+<div id="quizCount">
+    0 / 0
+</div>
+
+    <div id="quizHint"></div>
+    <div id="quizMeaning"></div>
+
+
+<div class="quiz-buttons">
+
+<button onclick="showQuizAnswerA()">♪</button>
+<button onclick="showQuizAnswerB()">✎</button>
+
+</div>
+
+
+    <div class="quiz-buttons">
+
+        <button onclick="prevQuizWord()">
+            ≪
+        </button>
+
+        <button onclick="nextQuizWord()">
+            ≫
+        </button>
+
+    </div>
+
+
+<button class="home-button" onclick="openGroupSelect('quiz')">
+    ☜
+</button>
+
+<button class="home-button" onclick="goHome()">
+    ⌂
+</button>
+
+<button class="home-button" onclick="openWordList()">
+    ≡
+</button>
+
+</div>
+
+<div id="studyScreen" class="screen hidden">
+
+    <div class="study-word-area">
+
+        <button
+            id="studyBookmark"
+            class="bookmark-button"
+            type="button"
+            onclick="toggleStudyCheck()"
+            aria-label="현재 단어 체크"
+            title="현재 단어 체크">
+            ☆
+        </button>
+
+        <button
+            class="study-nav study-prev"
+            onclick="prevStudyWord()">
+            ‹
+        </button>
+
+        <div id="studyWord">
+            ▶︎
+        </div>
+
+        <button
+            class="study-nav study-next"
+            onclick="nextStudyWord()">
+            ›
+        </button>
+
+    </div>
+
+    <div id="studyReading">
+    </div>
+
+    <div id="studyMeaning">
+    </div>
+
+    <div id="studyCount">
+        0 / 0
+    </div>
+
+    <div class="study-buttons">
+
+    </div>
+
+<div class="study-buttons">
+
+    <button
+        id="studyToggleButton"
+        onclick="toggleStudy()">
+        ▶︎
+    </button>
+
+    <button
+        id="studyAnswerToggle"
+        onclick="toggleStudyAnswer()">
+        ♪
+    </button>
+
+    <button onclick="resetStudy()">
+        ⚄
+    </button>
+
+    <button onclick="openCheckedWords()">
+        ★
+    </button>
+
+    <button onclick="openWordList()">
+        ≡
+    </button>
+
+</div>
+
+    <div class="study-bottom-buttons">
+
+        <button
+            class="home-button"
+            onclick="openGroupSelect('study')">
+            ☜
+        </button>
+
+        <button
+            class="home-button"
+            onclick="goHome()">
+            ⌂
+        </button>
+
+    </div>
+
+</div>
+
+
+<div id="checkedScreen" class="screen hidden">
+    <h1>체크한 단어</h1>
+
+    <div id="checkedCount"></div>
+
+    <div id="checkedList"></div>
+
+    <button class="home-button" onclick="openStudy()">
+        ☜
+    </button>
+
+    <button class="delete-all-button" onclick="clearAllCheckedWords()">
+        reset
+    </button>
+
+    <button class="home-button" onclick="goHome()">
+        ⌂
+    </button>
+</div>
+
+
+<script>
+function hideAllScreens() {
+    document.getElementById("mainScreen").classList.add("hidden");
+    document.getElementById("quizScreen").classList.add("hidden");
+    document.getElementById("studyScreen").classList.add("hidden");
+    document.getElementById("checkedScreen").classList.add("hidden");
+    document.getElementById("groupScreen").classList.add("hidden");
+    document.getElementById("wordListScreen").classList.add("hidden");
+}
+
+
+const words = [
+
+　　　{
+        kanji: "鮮やか",
+        yomigana: "あざやか",
+        meaning: "선명함",
+        group: "한자읽기"
+    },
+    {
+        kanji: "衣装",
+        yomigana: "いしょう",
+        meaning: "의상",
+        group: "한자읽기"
+    },
+    {
+        kanji: "絡まる",
+        yomigana: "からまる",
+        meaning: "휘감기다, 얽히다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "実践",
+        yomigana: "じっせん",
+        meaning: "실천",
+        group: "한자읽기"
+    },
+    {
+        kanji: "詳細",
+        yomigana: "しょうさい",
+        meaning: "상세",
+        group: "한자읽기"
+    },
+    {
+        kanji: "背骨",
+        yomigana: "せぼね",
+        meaning: "척추",
+        group: "한자읽기"
+    },
+    {
+        kanji: "農薬",
+        yomigana: "のうやく",
+        meaning: "농약",
+        group: "한자읽기"
+    },
+    {
+        kanji: "分析",
+        yomigana:"ぶんせき",
+        meaning: "분석",
+        group: "한자읽기"
+    },
+    {
+        kanji: "迷う",
+        yomigana: "まよう",
+        meaning: "망설이다",
+        group: "한자읽기"
+    },
+ 　  {
+        kanji: "優秀",
+        yomigana: "ゆうしゅう",
+        meaning: "우수",
+        group: "한자읽기"
+    },
+    {
+        kanji: "握手",
+        yomigana: "あくしゅ",
+        meaning: "악수",
+        group: "한자읽기"
+    },
+    {
+        kanji: "腕",
+        yomigana: "うで",
+        meaning: "팔",
+        group: "한자읽기"
+    },
+    {
+        kanji: "運賃",
+        yomigana: "うんちん",
+        meaning: "운임",
+        group: "한자읽기"
+    },
+    {
+        kanji: "幼い",
+        yomigana: "おさない",
+        meaning: "어리다, 유치하다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "険しい",
+        yomigana: "けわしい",
+        meaning: "험악하다, 험상궂다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "削除",
+        yomigana: "さくじょ",
+        meaning: "삭제",
+        group: "한자읽기"
+    },
+    {
+        kanji: "善良だ",
+        yomigana: "ぜんりょうだ",
+        meaning: "선량하다, 어질다",
+        group: "한자읽기"
+    },
+  　 {
+        kanji: "平等",
+        yomigana: "びょうどう",
+        meaning: "평등",
+        group: "한자읽기"
+    },
+    {
+        kanji: "乱れる",
+        yomigana: "みだれる",
+        meaning: "흐트러지다, 흐려지다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "勇ましい",
+        yomigana: "いさましい",
+        meaning: "용감하다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "記憶",
+        yomigana: "きおく",
+        meaning: "기억",
+        group: "한자읽기"
+    },
+    {
+        kanji: "刺激",
+        yomigana: "しげき",
+        meaning: "자극",
+        group: "한자읽기"
+    },
+　   {
+        kanji: "世間",
+        yomigana: "せけん",
+        meaning: "세간, 세상",
+        group: "한자읽기"
+    },
+    {
+        kanji: "素材",
+        yomigana: "そざい",
+        meaning: "소재",
+        group: "한자읽기"
+    },
+    {
+        kanji: "務める",
+        yomigana: "つとめる",
+        meaning: "역할을 맡다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "途端に",
+        yomigana: "とたんに",
+        meaning: "바로 그 순간",
+        group: "한자읽기"
+    },
+    {
+        kanji: "外れる",
+        yomigana: "はずれる",
+        meaning: "제외되다, 벗어나다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "焦る",
+        yomigana: "あせる",
+        meaning: "초조해하다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "著しい",
+        yomigana: "いちじるしい",
+        meaning: "현저하다, 두드러지다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "介護",
+        yomigana: "かいご",
+        meaning: "간호",
+        group: "한자읽기"
+    },
+    {
+        kanji: "傾く",
+        yomigana: "かたむく",
+        meaning: "기울다, 치우치다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "賛否",
+        yomigana: "さんぴ",
+        meaning: "찬반, 가부",
+        group: "한자읽기"
+    },
+    {
+        kanji: "情景",
+        yomigana: "じょうけい",
+        meaning: "정경, 광경",
+        group: "한자읽기"
+    },
+    {
+        kanji: "声援",
+        yomigana: "せいえん",
+        meaning: "성원",
+        group: "한자읽기"
+    },
+    {
+        kanji: "乏しい",
+        yomigana: "とぼしい",
+        meaning: "모자라다, 부족하다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "破片",
+        yomigana: "はへん",
+        meaning: "파편",
+        group: "한자읽기"
+    },
+    {
+        kanji: "下降",
+        yomigana: "かこう",
+        meaning: "하강, 추락",
+        group: "한자읽기"
+    },
+    {
+        kanji: "損害",
+        yomigana: "そんがい",
+        meaning: "손해",
+        group: "한자읽기"
+    },
+    {
+        kanji: "倒す",
+        yomigana: "たおす",
+        meaning: "쓰러뜨리다, 무너뜨리다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "比較的",
+        yomigana: "ひかくてき",
+        meaning: "비교적",
+        group: "한자읽기"
+    },
+    {
+        kanji: "圧倒的",
+        yomigana: "あっとうてき",
+        meaning: "압도적",
+        group: "한자읽기"
+    },
+    {
+        kanji: "映る",
+        yomigana: "うつる",
+        meaning: "비치다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "偶然",
+        yomigana: "ぐうぜん",
+        meaning: "우연히",
+        group: "한자읽기"
+    },
+    {
+        kanji: "軽傷",
+        yomigana: "けいしょう",
+        meaning: "경상",
+        group: "한자읽기"
+    },
+　   {
+        kanji: "下旬",
+        yomigana: "げじゅん",
+        meaning: "하순",
+        group: "한자읽기"
+    },
+    {
+        kanji: "憎む",
+        yomigana: "にくむ",
+        meaning: "미워하다, 증오하다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "恥",
+        yomigana: "はじ",
+        meaning: "부끄러움, 수치",
+        group: "한자읽기"
+    },
+    {
+        kanji: "等しい",
+        yomigana: "ひとしい",
+        meaning: "동등하다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "負担",
+        yomigana: "ふたん",
+        meaning: "부담",
+        group: "한자읽기"
+    },
+    {
+        kanji: "企画",
+        yomigana: "きかく",
+        meaning: "기획",
+        group: "한자읽기"
+    },
+    {
+        kanji: "怖い",
+        yomigana: "こわい",
+        meaning: "무섭다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "再度",
+        yomigana: "さいど",
+        meaning: "재차, 다시",
+        group: "한자읽기"
+    },
+    {
+        kanji: "湿る",
+        yomigana: "しめる",
+        meaning: "축축해지다, 습기 차다",
+        group: "한자읽기"
+    },
+ 　  {
+        kanji: "処理",
+        yomigana: "しょり",
+        meaning: "처리",
+        group: "한자읽기"
+    },
+    {
+        kanji: "総額",
+        yomigana: "そうがく",
+        meaning: "총액",
+        group: "한자읽기"
+    },
+    {
+        kanji: "抽選",
+        yomigana: "ちゅうせん",
+        meaning: "추첨",
+        group: "한자읽기"
+    },
+    {
+        kanji: "和やか",
+        yomigana: "なごやか",
+        meaning: "온화함",
+        group: "한자읽기"
+    },
+    {
+        kanji: "離れる",
+        yomigana: "はなれる",
+        meaning: "멀어지다, 떨어지다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "冷蔵庫",
+        yomigana: "れいぞうこ",
+        meaning: "냉장고",
+        group: "한자읽기"
+    },
+    {
+        kanji: "抱える",
+        yomigana: "かかえる",
+        meaning: "떠안다, 책임지다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "求人",
+        yomigana: "きゅうじん",
+        meaning: "구인",
+        group: "한자읽기"
+    },
+　   {
+        kanji: "絞る",
+        yomigana: "しぼる",
+        meaning: "조이다, (쥐어)짜다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "柔軟に",
+        yomigana: "じゅうなんに",
+        meaning: "유연하게",
+        group: "한자읽기"
+    },
+    {
+        kanji: "垂直",
+        yomigana: "すいちょく",
+        meaning: "수직",
+        group: "한자읽기"
+    },
+    {
+        kanji: "強火",
+        yomigana: "つよび",
+        meaning: "센 불",
+        group: "한자읽기"
+    },
+    {
+        kanji: "握る",
+        yomigana: "にぎる",
+        meaning: "쥐다, 잡다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "密閉",
+        yomigana: "みっぺい",
+        meaning: "밀폐",
+        group: "한자읽기"
+    },
+    {
+        kanji: "怪しい",
+        yomigana: "あやしい",
+        meaning: "수상하다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "納める",
+        yomigana: "おさめる",
+        meaning: "넣다, 납입하다",
+        group: "한자읽기"
+    },
+ 　  {
+        kanji: "劣る",
+        yomigana: "おとる",
+        meaning: "뒤떨어지다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "願望",
+        yomigana: "がんぼう",
+        meaning: "바람, 소원",
+        group: "한자읽기"
+    },
+    {
+        kanji: "競う",
+        yomigana: "きそう",
+        meaning: "겨루다, 경쟁하다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "貴重",
+        yomigana: "きちょう",
+        meaning: "귀중함",
+        group: "한자읽기"
+    },
+    {
+        kanji: "治療",
+        yomigana: "ちりょう",
+        meaning: "치료",
+        group: "한자읽기"
+    },
+    {
+        kanji: "伴う",
+        yomigana: "ともなう",
+        meaning: "동반하다, 따르다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "批評",
+        yomigana: "ひひょう",
+        meaning: "비평",
+        group: "한자읽기"
+    },
+    {
+        kanji: "容姿",
+        yomigana: "ようし",
+        meaning: "용모",
+        group: "한자읽기"
+    },
+  　 {
+        kanji: "囲む",
+        yomigana: "かこむ",
+        meaning: "둘러싸다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "行事",
+        yomigana: "ぎょうじ",
+        meaning: "행사",
+        group: "한자읽기"
+    },
+    {
+        kanji: "拒否",
+        yomigana: "きょひ",
+        meaning: "거부",
+        group: "한자읽기"
+    },
+    {
+        kanji: "現象",
+        yomigana: "げんしょう",
+        meaning: "현상",
+        group: "한자읽기"
+    },
+    {
+        kanji: "省略",
+        yomigana: "しょうりゃく",
+        meaning: "생략",
+        group: "한자읽기"
+    },
+    {
+        kanji: "憎い",
+        yomigana: "にくい",
+        meaning: "밉다",
+        group: "한자읽기"
+    },
+　　　{
+        kanji: "含める",
+        yomigana: "ふくめる",
+        meaning: "포함하다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "油断",
+        yomigana: "ゆだん",
+        meaning: "방심, 부주의",
+        group: "한자읽기"
+    },
+    {
+        kanji: "圧勝",
+        yomigana: "あっしょう",
+        meaning: "압승",
+        group: "한자읽기"
+    },
+    {
+        kanji: "傷む",
+        yomigana: "いたむ",
+        meaning: "상하다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "大幅",
+        yomigana: "おおはば",
+        meaning: "큰 폭",
+        group: "한자읽기"
+    },
+    {
+        kanji: "極端",
+        yomigana: "きょくたん",
+        meaning: "극단적임, 아주 지나침",
+        group: "한자읽기"
+    },
+    {
+        kanji: "悔しい",
+        yomigana: "くやしい",
+        meaning: "분하다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "継続",
+        yomigana: "けいぞく",
+        meaning: "계속",
+        group: "한자읽기"
+    },
+　　　{
+        kanji: "除く",
+        yomigana: "のぞく",
+        meaning: "제거하다, 제외하다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "貿易",
+        yomigana: "ぼうえき",
+        meaning: "무역",
+        group: "한자읽기"
+    },
+    {
+        kanji: "戻す",
+        yomigana: "もどす",
+        meaning: "(원래 자리, 상태) 되돌리다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "幼稚",
+        yomigana: "ようち",
+        meaning: "유치함",
+        group: "한자읽기"
+    },
+    {
+        kanji: "改めて",
+        yomigana: "あらためて",
+        meaning: "다시, 재차",
+        group: "한자읽기"
+    },
+    {
+        kanji: "拡充",
+        yomigana: "かくじゅう",
+        meaning: "확충",
+        group: "한자읽기"
+    },
+    {
+        kanji: "隠す",
+        yomigana: "かくす",
+        meaning: "감추다, 숨기다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "勧誘",
+        yomigana: "かんゆう",
+        meaning: "권유",
+        group: "한자읽기"
+    },
+    {
+        kanji: "姿勢",
+        yomigana: "しせい",
+        meaning: "자세",
+        group: "한자읽기"
+    },
+    {
+        kanji: "清潔",
+        yomigana: "せいけつ",
+        meaning: "청결함",
+        group: "한자읽기"
+    },
+    {
+        kanji: "積む",
+        yomigana: "つむ",
+        meaning: "(짐, 경력) 싸다, 싣다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "逃亡",
+        yomigana: "とうぼう",
+        meaning: "도망",
+        group: "한자읽기"
+    },
+    {
+        kanji: "模範",
+        yomigana: "もはん",
+        meaning: "모범",
+        group: "한자읽기"
+    },
+    {
+        kanji: "世の中",
+        yomigana: "よのなか",
+        meaning: "세상",
+        group: "한자읽기"
+    },
+    {
+        kanji: "撮影",
+        yomigana: "さつえい",
+        meaning: "촬영",
+        group: "한자읽기"
+    },    {
+        kanji: "占める",
+        yomigana: "しめる",
+        meaning: "(비율, 자리) 차지하다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "焦点",
+        yomigana: "しょうてん",
+        meaning: "초점",
+        group: "한자읽기"
+    },
+    {
+        kanji: "装置",
+        yomigana: "そうち",
+        meaning: "장치",
+        group: "한자읽기"
+    },
+    {
+        kanji: "抽象的",
+        yomigana: "ちゅうしょうてき",
+        meaning: "추상적",
+        group: "한자읽기"
+    },
+    {
+        kanji: "針",
+        yomigana: "はり",
+        meaning: "바늘",
+        group: "한자읽기"
+    },
+    {
+        kanji: "返却",
+        yomigana: "へんきゃく",
+        meaning: "(책, CD) 반환, 반납",
+        group: "한자읽기"
+    },
+    {
+        kanji: "略する",
+        yomigana: "りゃくする",
+        meaning: "생략하다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "祝う",
+        yomigana: "いわう",
+        meaning: "축하하다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "補う",
+        yomigana: "おぎなう",
+        meaning: "보충하다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "至急",
+        yomigana: "しきゅう",
+        meaning: "시급, 급히",
+        group: "한자읽기"
+    },
+    {
+        kanji: "地元",
+        yomigana: "じもと",
+        meaning: "그 지역, 그 고장, 연고지",
+        group: "한자읽기"
+    },    {
+        kanji: "率直",
+        yomigana: "そっちょく",
+        meaning: "솔직함",
+        group: "한자읽기"
+    },
+    {
+        kanji: "調節",
+        yomigana: "ちょうせつ",
+        meaning: "조절",
+        group: "한자읽기"
+    },
+    {
+        kanji: "豊富",
+        yomigana: "ほうふ",
+        meaning: "풍부함",
+        group: "한자읽기"
+    },
+    {
+        kanji: "密接",
+        yomigana: "みっせつ",
+        meaning: "밀접함",
+        group: "한자읽기"
+    },
+    {
+        kanji: "敗れる",
+        yomigana: "やぶれる",
+        meaning: "지다, 패배하다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "要求",
+        yomigana: "ようきゅう",
+        meaning: "요구",
+        group: "한자읽기"
+    },
+    {
+        kanji: "辛い",
+        yomigana: "からい",
+        meaning: "맵다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "規模",
+        yomigana: "きぼ",
+        meaning: "규모",
+        group: "한자읽기"
+    },
+    {
+        kanji: "景色",
+        yomigana: "けしき",
+        meaning: "경치",
+        group: "한자읽기"
+    },
+    {
+        kanji: "相互",
+        yomigana: "そうご",
+        meaning: "상호, 서로",
+        group: "한자읽기"
+    },
+    {
+        kanji: "備える",
+        yomigana: "そなえる",
+        meaning: "갖추다, 대비하다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "尊重",
+        yomigana: "そんちょう",
+        meaning: "존중",
+        group: "한자읽기"
+    },
+    {
+        kanji: "隣",
+        yomigana: "となり",
+        meaning: "옆",
+        group: "한자읽기"
+    },
+    {
+        kanji: "触れる",
+        yomigana: "ふれる",
+        meaning: "(문화, 주제) 접하다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "防災",
+        yomigana: "ぼうさい",
+        meaning: "방재",
+        group: "한자읽기"
+    },
+    {
+        kanji: "与える",
+        yomigana: "あたえる",
+        meaning: "주다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "温かい",
+        yomigana: "あたたかい",
+        meaning: "다정하다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "誤り",
+        yomigana: "あやまり",
+        meaning: "잘못, 틀림, 실수",
+        group: "한자읽기"
+    },
+    {
+        kanji: "案外",
+        yomigana: "あんがい",
+        meaning: "뜻밖에, 의외로",
+        group: "한자읽기"
+    },
+    {
+        kanji: "言い難い",
+        yomigana: "いいがたい",
+        meaning: "말하기 어렵다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "異常",
+        yomigana: "いじょう",
+        meaning: "이상함",
+        group: "한자읽기"
+    },
+    {
+        kanji: "移転",
+        yomigana: "いてん",
+        meaning: "이전",
+        group: "한자읽기"
+    },
+    {
+        kanji: "祈る",
+        yomigana: "いのる",
+        meaning: "기도하다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "違反",
+        yomigana: "いはん",
+        meaning: "위반",
+        group: "한자읽기"
+    },
+    {
+        kanji: "医療",
+        yomigana: "いりょう",
+        meaning: "의료",
+        group: "한자읽기"
+    },
+    {
+        kanji: "印刷",
+        yomigana: "いんさつ",
+        meaning: "인쇄",
+        group: "한자읽기"
+    },
+    {
+        kanji: "植木",
+        yomigana: "うえき",
+        meaning: "정원수, 분재",
+        group: "한자읽기"
+    },
+    {
+        kanji: "浮く",
+        yomigana: "うく",
+        meaning: "떠오르다, 들뜨다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "疑い",
+        yomigana: "うたがい",
+        meaning: "의심",
+        group: "한자읽기"
+    },
+    {
+        kanji: "宇宙",
+        yomigana: "うちゅう",
+        meaning: "우주",
+        group: "한자읽기"
+    },
+    {
+        kanji: "運送",
+        yomigana: "うんそう",
+        meaning: "운송",
+        group: "한자읽기"
+    },
+    {
+        kanji: "偉い",
+        yomigana: "えらい",
+        meaning: "훌륭하다, 대단하다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "得る",
+        yomigana: "える",
+        meaning: "얻다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "延期",
+        yomigana: "えんき",
+        meaning: "연기, 미룸",
+        group: "한자읽기"
+    },
+    {
+        kanji: "応援",
+        yomigana: "おうえん",
+        meaning: "응원",
+        group: "한자읽기"
+    },
+    {
+        kanji: "応対",
+        yomigana: "おうたい",
+        meaning: "응대, 접대",
+        group: "한자읽기"
+    },
+    {
+        kanji: "欧米",
+        yomigana: "おうべい",
+        meaning: "구미, 유럽과 미국",
+        group: "한자읽기"
+    },
+    {
+        kanji: "〜億",
+        yomigana: "〜おく",
+        meaning: "~억",
+        group: "한자읽기"
+    },
+    {
+        kanji: "置く",
+        yomigana: "おく",
+        meaning: "놓다, 두다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "怒る",
+        yomigana: "おこる",
+        meaning: "화내다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "踊り",
+        yomigana: "おどり",
+        meaning: "춤",
+        group: "한자읽기"
+    },
+    {
+        kanji: "主",
+        yomigana: "おも",
+        meaning: "주됨",
+        group: "한자읽기"
+    },
+    {
+        kanji: "改善",
+        yomigana: "かいぜん",
+        meaning: "개선",
+        group: "한자읽기"
+    },
+    {
+        kanji: "会談",
+        yomigana: "かいだん",
+        meaning: "회담",
+        group: "한자읽기"
+    },
+    {
+        kanji: "快適",
+        yomigana: "かいてき",
+        meaning: "쾌적함",
+        group: "한자읽기"
+    },
+    {
+        kanji: "回復",
+        yomigana: "かいふく",
+        meaning: "회복",
+        group: "한자읽기"
+    },
+    {
+        kanji: "重ねる",
+        yomigana: "かさねる",
+        meaning: "거듭하다, 겹치다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "賢い",
+        yomigana: "かしこい",
+        meaning: "현명하다, 영리하다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "仮定",
+        yomigana: "かてい",
+        meaning: "가정",
+        group: "한자읽기"
+    },
+    {
+        kanji: "可能性",
+        yomigana: "かのうせい",
+        meaning: "가능성",
+        group: "한자읽기"
+    },
+    {
+        kanji: "貨物",
+        yomigana: "かもつ",
+        meaning: "화물",
+        group: "한자읽기"
+    },
+    {
+        kanji: "観察",
+        yomigana: "かんさつ",
+        meaning: "관찰",
+        group: "한자읽기"
+    },
+    {
+        kanji: "乾燥",
+        yomigana: "かんそう",
+        meaning: "건조",
+        group: "한자읽기"
+    },
+    {
+        kanji: "缶詰",
+        yomigana: "かんずめ",
+        meaning: "통조림",
+        group: "한자읽기"
+    },
+    {
+        kanji: "完了",
+        yomigana: "かんりょう",
+        meaning: "완료",
+        group: "한자읽기"
+    },
+    {
+        kanji: "危険",
+        yomigana: "きけん",
+        meaning: "위험",
+        group: "한자읽기"
+    },
+    {
+        kanji: "機嫌",
+        yomigana: "きげん",
+        meaning: "기분, 심기",
+        group: "한자읽기"
+    },
+    {
+        kanji: "記事",
+        yomigana: "きじ",
+        meaning: "기사",
+        group: "한자읽기"
+    },
+    {
+        kanji: "規制",
+        yomigana: "きせい",
+        meaning: "규제",
+        group: "한자읽기"
+    },
+    {
+        kanji: "決まる",
+        yomigana: "きまる",
+        meaning: "결정되다, 정해지다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "客",
+        yomigana: "きゃく",
+        meaning: "손님",
+        group: "한자읽기"
+    },
+    {
+        kanji: "休息",
+        yomigana: "きゅうそく",
+        meaning: "휴식",
+        group: "한자읽기"
+    },
+    {
+        kanji: "共感",
+        yomigana: "きょうかん",
+        meaning: "공감",
+        group: "한자읽기"
+    },
+    {
+        kanji: "協力",
+        yomigana: "きょうりょく",
+        meaning: "협력",
+        group: "한자읽기"
+    },
+    {
+        kanji: "漁業",
+        yomigana: "ぎょぎょう",
+        meaning: "어업",
+        group: "한자읽기"
+    },
+    {
+        kanji: "記録",
+        yomigana: "きろく",
+        meaning: "기록",
+        group: "한자읽기"
+    },
+    {
+        kanji: "議論",
+        yomigana: "ぎろん",
+        meaning: "의논, 논쟁",
+        group: "한자읽기"
+    },
+    {
+        kanji: "空港",
+        yomigana: "くうこう",
+        meaning: "공항",
+        group: "한자읽기"
+    },
+    {
+        kanji: "靴",
+        yomigana: "くつ",
+        meaning: "신발, 구두",
+        group: "한자읽기"
+    },
+    {
+        kanji: "雲",
+        yomigana: "くも",
+        meaning: "구름",
+        group: "한자읽기"
+    },
+    {
+        kanji: "暮す",
+        yomigana: "くらす",
+        meaning: "살다, 생활하다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "芸能",
+        yomigana: "げいのう",
+        meaning: "예능, 연예",
+        group: "한자읽기"
+    },
+    {
+        kanji: "警備",
+        yomigana: "けいび",
+        meaning: "경비",
+        group: "한자읽기"
+    },
+    {
+        kanji: "結果",
+        yomigana: "けっか",
+        meaning: "결과",
+        group: "한자읽기"
+    },
+    {
+        kanji: "原因",
+        yomigana: "げんいん",
+        meaning: "원인",
+        group: "한자읽기"
+    },
+    {
+        kanji: "厳重",
+        yomigana: "げんじゅう",
+        meaning: "엄중함",
+        group: "한자읽기"
+    },
+    {
+        kanji: "建設",
+        yomigana: "けんせつ",
+        meaning: "건설",
+        group: "한자읽기"
+    },
+    {
+        kanji: "講演",
+        yomigana: "こうえん",
+        meaning: "강연",
+        group: "한자읽기"
+    },
+    {
+        kanji: "郊外",
+        yomigana: "こうがい",
+        meaning: "교외",
+        group: "한자읽기"
+    },
+    {
+        kanji: "公害",
+        yomigana: "こうがい",
+        meaning: "공해",
+        group: "한자읽기"
+    },
+    {
+        kanji: "交差点",
+        yomigana: "こうさてん",
+        meaning: "교차로",
+        group: "한자읽기"
+    },
+    {
+        kanji: "高層",
+        yomigana: "こうそう",
+        meaning: "고층",
+        group: "한자읽기"
+    },
+    {
+        kanji: "声",
+        yomigana: "こえ",
+        meaning: "(목)소리",
+        group: "한자읽기"
+    },
+    {
+        kanji: "超える",
+        yomigana: "こえる",
+        meaning: "넘다, 추월하다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "氷",
+        yomigana: "こおり",
+        meaning: "얼음",
+        group: "한자읽기"
+    },
+    {
+        kanji: "故郷",
+        yomigana: "こきょう",
+        meaning: "고향",
+        group: "한자읽기"
+    },
+    {
+        kanji: "小包",
+        yomigana: "こづつみ",
+        meaning: "소포",
+        group: "한자읽기"
+    },
+    {
+        kanji: "異なる",
+        yomigana: "ことなる",
+        meaning: "다르다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "断る",
+        yomigana: "ことわる",
+        meaning: "거절하다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "混乱",
+        yomigana: "こんらん",
+        meaning: "혼란",
+        group: "한자읽기"
+    },
+    {
+        kanji: "裁判",
+        yomigana: "さいばん",
+        meaning: "재판",
+        group: "한자읽기"
+    },
+    {
+        kanji: "再利用",
+        yomigana: "さいりよう",
+        meaning: "재사용",
+        group: "한자읽기"
+    },
+    {
+        kanji: "幸い",
+        yomigana: "さいわい",
+        meaning: "다행임",
+        group: "한자읽기"
+    },
+    {
+        kanji: "作業",
+        yomigana: "さぎょう",
+        meaning: "작업",
+        group: "한자읽기"
+    },
+    {
+        kanji: "寒い",
+        yomigana: "さむい",
+        meaning: "춥다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "参考",
+        yomigana: "さんこう",
+        meaning: "참고",
+        group: "한자읽기"
+    },
+    {
+        kanji: "事件",
+        yomigana: "じけん",
+        meaning: "사건",
+        group: "한자읽기"
+    },
+    {
+        kanji: "指示",
+        yomigana: "しじ",
+        meaning: "지시",
+        group: "한자읽기"
+    },
+    {
+        kanji: "地震",
+        yomigana: "じしん",
+        meaning: "지진",
+        group: "한자읽기"
+    },
+    {
+        kanji: "島",
+        yomigana: "しま",
+        meaning: "섬",
+        group: "한자읽기"
+    },
+    {
+        kanji: "宿泊",
+        yomigana: "しゅくはく",
+        meaning: "숙박",
+        group: "한자읽기"
+    },
+    {
+        kanji: "手術",
+        yomigana: "しゅじゅつ",
+        meaning: "수술",
+        group: "한자읽기"
+    },
+    {
+        kanji: "出版",
+        yomigana: "しゅっぱん",
+        meaning: "출판",
+        group: "한자읽기"
+    },
+    {
+        kanji: "首脳",
+        yomigana: "しゅのう",
+        meaning: "수뇌, 정상",
+        group: "한자읽기"
+    },
+    {
+        kanji: "寿命",
+        yomigana: "じゅみょう",
+        meaning: "수명",
+        group: "한자읽기"
+    },
+    {
+        kanji: "主要",
+        yomigana: "しゅよう",
+        meaning: "주요",
+        group: "한자읽기"
+    },
+    {
+        kanji: "順調",
+        yomigana: "じゅんちょう",
+        meaning: "순조로운",
+        group: "한자읽기"
+    },
+    {
+        kanji: "〜賞",
+        yomigana: "〜しょう",
+        meaning: "~상",
+        group: "한자읽기"
+    },
+    {
+        kanji: "状況",
+        yomigana: "じょうきょう",
+        meaning: "상황",
+        group: "한자읽기"
+    },
+    {
+        kanji: "正直",
+        yomigana: "しょうじき",
+        meaning: "정직함, 솔직함",
+        group: "한자읽기"
+    },
+    {
+        kanji: "商品",
+        yomigana: "しょうひん",
+        meaning: "상품",
+        group: "한자읽기"
+    },
+    {
+        kanji: "情報",
+        yomigana: "じょうほう",
+        meaning: "정보",
+        group: "한자읽기"
+    },
+    {
+        kanji: "諸国",
+        yomigana: "しょこく",
+        meaning: "여러 나라",
+        group: "한자읽기"
+    },
+    {
+        kanji: "職場",
+        yomigana: "しょくば",
+        meaning: "직장",
+        group: "한자읽기"
+    },
+    {
+        kanji: "資料",
+        yomigana: "しりょう",
+        meaning: "자료",
+        group: "한자읽기"
+    },
+    {
+        kanji: "進学率",
+        yomigana: "しんがくりつ",
+        meaning: "진학률",
+        group: "한자읽기"
+    },
+    {
+        kanji: "心臓",
+        yomigana: "しんぞう",
+        meaning: "심장",
+        group: "한자읽기"
+    },
+    {
+        kanji: "信用",
+        yomigana: "しんよう",
+        meaning: "신용",
+        group: "한자읽기"
+    },
+    {
+        kanji: "信頼",
+        yomigana: "しんらい",
+        meaning: "신뢰",
+        group: "한자읽기"
+    },
+    {
+        kanji: "人類",
+        yomigana: "じんるい",
+        meaning: "인류",
+        group: "한자읽기"
+    },
+    {
+        kanji: "数年",
+        yomigana: "すうねん",
+        meaning: "여러 해, 수년",
+        group: "한자읽기"
+    },
+    {
+        kanji: "優れる",
+        yomigana: "すぐれる",
+        meaning: "뛰어나다, 우수하다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "隅",
+        yomigana: "すみ",
+        meaning: "구석, 모퉁이",
+        group: "한자읽기"
+    },
+    {
+        kanji: "性格",
+        yomigana: "せいかく",
+        meaning: "성격",
+        group: "한자읽기"
+    },
+　  {
+        kanji: "成功",
+        yomigana: "せいこう",
+        meaning: "성공",
+        group: "한자읽기"
+    },
+    {
+        kanji: "政治",
+        yomigana: "せいじ",
+        meaning: "정치",
+        group: "한자읽기"
+    },
+    {
+        kanji: "成長",
+        yomigana: "せいちょう",
+        meaning: "성장",
+        group: "한자읽기"
+    },
+    {
+        kanji: "政党",
+        yomigana: "せいどう",
+        meaning: "정당",
+        group: "한자읽기"
+    },
+    {
+        kanji: "責任",
+        yomigana: "せきにん",
+        meaning: "책임",
+        group: "한자읽기"
+    },    {
+        kanji: "設備",
+        yomigana: "せつび",
+        meaning: "설비",
+        group: "한자읽기"
+    },
+    {
+        kanji: "洗浄",
+        yomigana: "せんじょう",
+        meaning: "전쟁",
+        group: "한자읽기"
+    },
+    {
+        kanji: "選択",
+        yomigana: "せんたく",
+        meaning: "선택",
+        group: "한자읽기"
+    },
+    {
+        kanji: "全般",
+        yomigana: "ぜんぱん",
+        meaning: "전반, 전체",
+        group: "한자읽기"
+    },
+    {
+        kanji: "操作",
+        yomigana: "そうさ",
+        meaning: "조작",
+        group: "한자읽기"
+    },    {
+        kanji: "想像",
+        yomigana: "そうぞう",
+        meaning: "상상",
+        group: "한자읽기"
+    },
+    {
+        kanji: "損得",
+        yomigana: "そんとく",
+        meaning: "손익",
+        group: "한자읽기"
+    },
+    {
+        kanji: "退院",
+        yomigana: "たいいん",
+        meaning: "퇴원",
+        group: "한자읽기"
+    },
+    {
+        kanji: "大臣",
+        yomigana: "だいじん",
+        meaning: "대신, 장관",
+        group: "한자읽기"
+    },
+    {
+        kanji: "代表",
+        yomigana: "だいひょう",
+        meaning: "대표",
+        group: "한자읽기"
+    },
+    {
+        kanji: "他人",
+        yomigana: "たにん",
+        meaning: "타인",
+        group: "한자읽기"
+    },
+    {
+        kanji: "単純",
+        yomigana: "たんじゅん",
+        meaning: "단순함",
+        group: "한자읽기"
+    },
+    {
+        kanji: "担当者",
+        yomigana: "たんとうしゃ",
+        meaning: "담당자",
+        group: "한자읽기"
+    },
+    {
+        kanji: "知恵",
+        yomigana: "ちえ",
+        meaning: "지혜",
+        group: "한자읽기"
+    },
+    {
+        kanji: "地球",
+        yomigana: "ちきゅう",
+        meaning: "지구",
+        group: "한자읽기"
+    },
+    {
+        kanji: "遅刻",
+        yomigana: "ちこく",
+        meaning: "지각",
+        group: "한자읽기"
+    },
+    {
+        kanji: "知識",
+        yomigana: "ちしき",
+        meaning: "지식",
+        group: "한자읽기"
+    },
+    {
+        kanji: "駐車",
+        yomigana: "ちゅうしゃ",
+        meaning: "주차",
+        group: "한자읽기"
+    },
+    {
+        kanji: "〜兆",
+        yomigana: "〜ちょう",
+        meaning: "~조",
+        group: "한자읽기"
+    },
+    {
+        kanji: "調査",
+        yomigana: "ちょうさ",
+        meaning: "조사",
+        group: "한자읽기"
+    },
+    {
+        kanji: "著者",
+        yomigana: "ちょしゃ",
+        meaning: "저자",
+        group: "한자읽기"
+    },
+    {
+        kanji: "貯蔵",
+        yomigana: "ちょぞう",
+        meaning: "저장",
+        group: "한자읽기"
+    },
+    {
+        kanji: "通行",
+        yomigana: "つうこう",
+        meaning: "통행",
+        group: "한자읽기"
+    },
+    {
+        kanji: "次々と",
+        yomigana: "つぎつぎと",
+        meaning: "잇달아",
+        group: "한자읽기"
+    },
+    {
+        kanji: "机",
+        yomigana: "つくえ",
+        meaning: "책상",
+        group: "한자읽기"
+    },
+    {
+        kanji: "伝える",
+        yomigana: "つたえる",
+        meaning: "전하다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "適切",
+        yomigana: "てきせつ",
+        meaning: "적절함",
+        group: "한자읽기"
+    },
+    {
+        kanji: "鉄橋",
+        yomigana: "てっきょう",
+        meaning: "철교",
+        group: "한자읽기"
+    },
+    {
+        kanji: "展開",
+        yomigana: "てんかい",
+        meaning: "전개",
+        group: "한자읽기"
+    },    {
+        kanji: "登山",
+        yomigana: "とざん",
+        meaning: "등산",
+        group: "한자읽기"
+    },
+    {
+        kanji: "途中",
+        yomigana: "とちゅう",
+        meaning: "도중",
+        group: "한자읽기"
+    },
+    {
+        kanji: "突然",
+        yomigana: "とつぜん",
+        meaning: "돌연, 갑자기",
+        group: "한자읽기"
+    },
+    {
+        kanji: "届く",
+        yomigana: "とどく",
+        meaning: "도착하다, 이르다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "努力",
+        yomigana: "どりょく",
+        meaning: "노력",
+        group: "한자읽기"
+    },
+    {
+        kanji: "泥",
+        yomigana: "どろ",
+        meaning: "진흙",
+        group: "한자읽기"
+    },
+    {
+        kanji: "内容",
+        yomigana: "ないよう",
+        meaning: "내용",
+        group: "한자읽기"
+    },
+    {
+        kanji: "仲良く",
+        yomigana: "なかよく",
+        meaning: "사이좋게",
+        group: "한자읽기"
+    },
+    {
+        kanji: "悩む",
+        yomigana: "なやむ",
+        meaning: "고민하다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "日課",
+        yomigana: "にっか",
+        meaning: "일과",
+        group: "한자읽기"
+    },
+    {
+        kanji: "盗む",
+        yomigana: "ぬすむ",
+        meaning: "훔치다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "塗る",
+        yomigana: "ぬる",
+        meaning: "바르다, 칠하다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "年齢",
+        yomigana: "ねんれい",
+        meaning: "연령, 나이",
+        group: "한자읽기"
+    },
+    {
+        kanji: "熱演",
+        yomigana: "ねつせん",
+        meaning: "열연",
+        group: "한자읽기"
+    },
+    {
+        kanji: "残る",
+        yomigana: "のこる",
+        meaning: "남다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "述べる",
+        yomigana: "のべる",
+        meaning: "서술하다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "〜倍",
+        yomigana: "〜ばい",
+        meaning: "~배",
+        group: "한자읽기"
+    },
+    {
+        kanji: "配布",
+        yomigana: "はいふ",
+        meaning: "배포",
+        group: "한자읽기"
+    },
+    {
+        kanji: "爆発",
+        yomigana: "ばくはつ",
+        meaning: "폭발",
+        group: "한자읽기"
+    },
+    {
+        kanji: "発射",
+        yomigana: "はっしゃ",
+        meaning: "발사",
+        group: "한자읽기"
+    },
+    {
+        kanji: "張り切る",
+        yomigana: "はりきる",
+        meaning: "기운이 넘치다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "犯罪",
+        yomigana: "はんざい",
+        meaning: "범죄",
+        group: "한자읽기"
+    },
+    {
+        kanji: "反対",
+        yomigana: "はんたい",
+        meaning: "반대",
+        group: "한자읽기"
+    },
+    {
+        kanji: "判断",
+        yomigana: "はんだん",
+        meaning: "판단",
+        group: "한자읽기"
+    },
+    {
+        kanji: "販売",
+        yomigana: "はんばい",
+        meaning: "판매",
+        group: "한자읽기"
+    },
+    {
+        kanji: "悲劇",
+        yomigana: "ひげき",
+        meaning: "비극",
+        group: "한자읽기"
+    },
+    {
+        kanji: "皮膚",
+        yomigana: "ひふ",
+        meaning: "피부",
+        group: "한자읽기"
+    },
+    {
+        kanji: "〜秒",
+        yomigana: "〜びょう",
+        meaning: "~초",
+        group: "한자읽기"
+    },
+    {
+        kanji: "評価",
+        yomigana: "ひょうか",
+        meaning: "평가",
+        group: "한자읽기"
+    },
+    {
+        kanji: "標識",
+        yomigana: "ひょうしき",
+        meaning: "표지, 표식",
+        group: "한자읽기"
+    },
+    {
+        kanji: "舞台",
+        yomigana: "ぶたい",
+        meaning: "무대",
+        group: "한자읽기"
+    },
+    {
+        kanji: "部分的",
+        yomigana: "ぶぶんてき",
+        meaning: "부분적",
+        group: "한자읽기"
+    },
+    {
+        kanji: "平均",
+        yomigana: "へいきん",
+        meaning: "평균",
+        group: "한자읽기"
+    },
+    {
+        kanji: "減る",
+        yomigana: "へる",
+        meaning: "줄다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "方針",
+        yomigana: "ほうしん",
+        meaning: "방침",
+        group: "한자읽기"
+    },
+    {
+        kanji: "法律",
+        yomigana: "ほうりつ",
+        meaning: "법률",
+        group: "한자읽기"
+    },
+    {
+        kanji: "星",
+        yomigana: "ほし",
+        meaning: "별",
+        group: "한자읽기"
+    },
+    {
+        kanji: "掘る",
+        yomigana: "ほる",
+        meaning: "파다, 캐다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "招く",
+        yomigana: "まねく",
+        meaning: "초대하다, 부르다, 초래하다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "認める",
+        yomigana: "みとめる",
+        meaning: "인정하다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "未来",
+        yomigana: "みらい",
+        meaning: "미래",
+        group: "한자읽기"
+    },
+    {
+        kanji: "迎える",
+        yomigana: "むかえる",
+        meaning: "맞이하다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "面倒",
+        yomigana: "めんどう",
+        meaning: "귀찮음, 번거로움",
+        group: "한자읽기"
+    },
+    {
+        kanji: "目的",
+        yomigana: "もくてき",
+        meaning: "목적",
+        group: "한자읽기"
+    },
+    {
+        kanji: "求める",
+        yomigana: "もとめる",
+        meaning: "구하다, 청하다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "物語",
+        yomigana: "ものがたり",
+        meaning: "이야기",
+        group: "한자읽기"
+    },
+    {
+        kanji: "役目",
+        yomigana: "やくめ",
+        meaning: "임무",
+        group: "한자읽기"
+    },
+    {
+        kanji: "焼ける",
+        yomigana: "やける",
+        meaning: "(불)타다, 구워지다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "家賃",
+        yomigana: "やちん",
+        meaning: "집세",
+        group: "한자읽기"
+    },
+    {
+        kanji: "雇う",
+        yomigana: "やとう",
+        meaning: "고용하다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "優勝",
+        yomigana: "ゆうしょう",
+        meaning: "우승",
+        group: "한자읽기"
+    },
+    {
+        kanji: "豊か",
+        yomigana: "ゆたか",
+        meaning: "풍요로움",
+        group: "한자읽기"
+    },
+    {
+        kanji: "良い",
+        yomigana: "よい",
+        meaning: "좋다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "溶岩",
+        yomigana: "ようがん",
+        meaning: "용암",
+        group: "한자읽기"
+    },
+    {
+        kanji: "流行",
+        yomigana: "りゅうこう",
+        meaning: "유행",
+        group: "한자읽기"
+    },
+    {
+        kanji: "両替",
+        yomigana: "りょうがえ",
+        meaning: "환전",
+        group: "한자읽기"
+    },
+    {
+        kanji: "両国",
+        yomigana: "りょうこく",
+        meaning: "양국",
+        group: "한자읽기"
+    },
+    {
+        kanji: "例外",
+        yomigana: "れいがい",
+        meaning: "예외",
+        group: "한자읽기"
+    },
+    {
+        kanji: "冷凍",
+        yomigana: "れいとう",
+        meaning: "냉동",
+        group: "한자읽기"
+    },
+    {
+        kanji: "歴史",
+        yomigana: "れきし",
+        meaning: "역사",
+        group: "한자읽기"
+    },
+    {
+        kanji: "連続",
+        yomigana: "れんぞく",
+        meaning: "연속",
+        group: "한자읽기"
+    },
+    {
+        kanji: "連絡",
+        yomigana: "れんらく",
+        meaning: "연락",
+        group: "한자읽기"
+    },
+    {
+        kanji: "笑う",
+        yomigana: "わらう",
+        meaning: "웃다",
+        group: "한자읽기"
+    },
+    {
+        kanji: "割合",
+        yomigana: "わりあい",
+        meaning: "비율",
+        group: "한자읽기"
+    },
+
+];
+
+
+
+function goHome() {
+    clearInterval(studyTimer);
+    studyTimer = null;
+    studyPlaying = false;
+
+    hideAllScreens();
+    document.getElementById("mainScreen").classList.remove("hidden");
+}
+
+
+let quizIndex = 0;
+let quizWords = [];
+
+function shuffle(array) {
+    const result = [...array];
+
+    for (let i = result.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [result[i], result[j]] = [result[j], result[i]];
+    }
+
+    return result;
+}
+
+function openQuiz() {
+    hideAllScreens();
+    document.getElementById("quizScreen").classList.remove("hidden");
+
+quizWords = words.filter(
+    word => word.group === selectedGroup
+);
+    quizIndex = 0;
+
+    showQuizWord();
+}
+
+function showQuizWord() {
+    const word = quizWords[quizIndex];
+
+    if (!word) return;
+
+    document.getElementById("quizWord").textContent = word.kanji;
+    document.getElementById("quizCount").textContent =
+        (quizIndex + 1) + " / " + quizWords.length;
+    document.getElementById("quizHint").textContent = "";
+    document.getElementById("quizMeaning").textContent = "";
+    }
+
+function prevQuizWord() {
+    quizIndex--;
+
+    if (quizIndex < 0) {
+        quizIndex = quizWords.length - 1;
+    }
+
+    showQuizWord();
+}
+
+function showQuizAnswerA() {
+    const word = quizWords[quizIndex];
+
+    if (!word) return;
+
+    const hint = document.getElementById("quizHint");
+
+    if (hint.textContent === "") {
+        hint.textContent = word.yomigana;
+    } else {
+        hint.textContent = "";
+    }
+}
+
+function showQuizAnswerB() {
+    const word = quizWords[quizIndex];
+
+    if (!word) return;
+
+    const meaning = document.getElementById("quizMeaning");
+
+    if (meaning.textContent === "") {
+        meaning.textContent = word.meaning;
+    } else {
+        meaning.textContent = "";
+    }
+}
+
+function nextQuizWord() {
+    quizIndex++;
+
+if (quizIndex >= quizWords.length) {
+    quizIndex = 0;
+}
+
+    showQuizWord();
+}
+
+
+let checkedWords = JSON.parse(
+    localStorage.getItem("checkedJapaneseWords") || "[]"
+);
+
+function isWordChecked(kanji) {
+    return checkedWords.includes(kanji);
+}
+
+function saveCheckedWords() {
+    localStorage.setItem(
+        "checkedJapaneseWords",
+        JSON.stringify(checkedWords)
+    );
+}
+
+function getCurrentStudyWord() {
+    if (!studyWords.length) return null;
+
+    return studyWords[studyIndex] || null;
+}
+
+function updateStudyBookmark() {
+    const button = document.getElementById("studyBookmark");
+    const word = getCurrentStudyWord();
+
+    if (!button) return;
+
+    const active = word && isWordChecked(word.kanji);
+
+    button.textContent = active ? "★" : "☆";
+    button.classList.toggle("active", !!active);
+    button.setAttribute(
+        "aria-label",
+        active ? "체크 해제" : "현재 단어 체크"
+    );
+    button.setAttribute(
+        "title",
+        active ? "체크 해제" : "현재 단어 체크"
+    );
+}
+
+function toggleStudyCheck() {
+    const word = getCurrentStudyWord();
+
+    if (!word) return;
+
+    clearInterval(studyTimer);
+    studyTimer = null;
+    studyPlaying = false;
+
+    document.getElementById("studyToggleButton").textContent = "▶︎";
+
+    if (isWordChecked(word.kanji)) {
+        checkedWords = checkedWords.filter(
+            kanji => kanji !== word.kanji
+        );
+    } else {
+        checkedWords.push(word.kanji);
+    }
+
+    saveCheckedWords();
+    updateStudyBookmark();
+}
+
+function openCheckedWords() {
+    clearInterval(studyTimer);
+    studyTimer = null;
+    studyPlaying = false;
+
+    hideAllScreens();
+    document.getElementById("checkedScreen").classList.remove("hidden");
+
+    renderCheckedWords();
+}
+
+function renderCheckedWords() {
+    const list = document.getElementById("checkedList");
+    const count = document.getElementById("checkedCount");
+
+    const checked = words.filter(word =>
+        checkedWords.includes(word.kanji)
+    );
+
+    count.textContent = `총 ${checked.length}개`;
+
+    if (checked.length === 0) {
+        list.innerHTML = "<p>(null)</p>";
+        return;
+    }
+
+    list.innerHTML = "";
+
+    checked.forEach(word => {
+        const item = document.createElement("div");
+        item.className = "checked-item";
+
+        const kanji = document.createElement("div");
+        kanji.className = "checked-kanji";
+        kanji.textContent = word.kanji;
+
+        const reading = document.createElement("div");
+        reading.className = "checked-reading";
+        reading.textContent = word.yomigana;
+
+        const meaning = document.createElement("div");
+        meaning.className = "checked-meaning";
+        meaning.textContent = word.meaning;
+
+        const deleteButton = document.createElement("button");
+        deleteButton.className = "delete-check-button";
+        deleteButton.textContent = "reset";
+        deleteButton.title = "체크 해제";
+        deleteButton.addEventListener("click", () => {
+            removeCheckedWord(word.kanji);
+        });
+
+        item.appendChild(kanji);
+        item.appendChild(reading);
+        item.appendChild(meaning);
+        item.appendChild(deleteButton);
+
+        list.appendChild(item);
+    });
+}
+
+function removeCheckedWord(kanji) {
+    checkedWords = checkedWords.filter(
+        word => word !== kanji
+    );
+
+    saveCheckedWords();
+    renderCheckedWords();
+    updateStudyBookmark();
+    clearInterval(studyTimer);
+studyTimer = null;
+studyPlaying = false;
+}
+
+
+let studyWords = [];
+let studyIndex = 0;
+let studyTimer = null;
+let studyPlaying = false;
+let selectedGroup = null;
+let selectedMode = null;
+
+let studyAnswerState = 0;
+
+const STUDY_INTERVAL = 3000;
+
+function openStudy() {
+    hideAllScreens();
+    document.getElementById("studyScreen").classList.remove("hidden");
+
+    clearInterval(studyTimer);
+    studyTimer = null;
+    studyPlaying = false;
+
+    studyAnswerState = 0;
+
+    document.getElementById("studyToggleButton").textContent = "▶︎";
+    document.getElementById("studyAnswerToggle").textContent = "♪";
+
+    showStudyWord();
+    updateStudyBookmark();
+}
+
+function showStudyWord() {
+    const word = getCurrentStudyWord();
+
+    if (!word) return;
+
+    document.getElementById("studyWord").textContent =
+        word.kanji;
+
+    if (studyAnswerState >= 1) {
+        document.getElementById("studyReading").textContent =
+            word.yomigana;
+    } else {
+        document.getElementById("studyReading").textContent =
+            "";
+    }
+
+    if (studyAnswerState >= 2) {
+        document.getElementById("studyMeaning").textContent =
+            word.meaning;
+    } else {
+        document.getElementById("studyMeaning").textContent =
+            "";
+    }
+
+    document.getElementById("studyCount").textContent =
+        (studyIndex + 1) + " / " + studyWords.length;
+
+    updateStudyBookmark();
+}
+
+function toggleStudyAnswer() {
+    studyAnswerState++;
+
+    if (studyAnswerState > 2) {
+        studyAnswerState = 0;
+    }
+
+    const button =
+        document.getElementById("studyAnswerToggle");
+
+    if (studyAnswerState === 0) {
+        button.textContent = "♪";
+    } else if (studyAnswerState === 1) {
+        button.textContent = "✎";
+    } else {
+        button.textContent = "⟲";
+    }
+
+    showStudyWord();
+}
+
+function prevStudyWord() {
+    if (!studyWords.length) return;
+
+    studyIndex--;
+
+    if (studyIndex < 0) {
+        studyIndex = studyWords.length - 1;
+    }
+
+    showStudyWord();
+}
+
+function nextStudyWord() {
+    if (!studyWords.length) return;
+
+    studyIndex++;
+
+    if (studyIndex >= studyWords.length) {
+
+        if (selectedGroup === "ALL") {
+            studyWords = shuffle(words);
+        } else {
+            studyWords = shuffle(
+                words.filter(
+                    word => word.group === selectedGroup
+                )
+            );
+        }
+
+        studyIndex = 0;
+    }
+
+    showStudyWord();
+}
+
+function toggleStudy() {
+    if (!studyWords.length) return;
+
+    if (studyPlaying) {
+        clearInterval(studyTimer);
+        studyTimer = null;
+        studyPlaying = false;
+
+        document.getElementById("studyToggleButton").textContent = "▶︎";
+    } else {
+        showStudyWord();
+
+        studyPlaying = true;
+
+        clearInterval(studyTimer);
+
+        studyTimer = setInterval(() => {
+            nextStudyWord();
+        }, STUDY_INTERVAL);
+        document.getElementById("studyToggleButton").textContent = "❚❚";
+    }
+}
+
+function resetStudy() {
+
+    clearInterval(studyTimer);
+    studyTimer = null;
+    studyPlaying = false;
+
+    if (selectedGroup === "ALL") {
+
+        studyWords = shuffle(words);
+
+    } else {
+
+        studyWords = shuffle(
+            words.filter(
+                word => word.group === selectedGroup
+            )
+        );
+    }
+
+    studyIndex = 0;
+
+    document
+        .getElementById("studyToggleButton")
+        .textContent = "▶︎";
+
+    showStudyWord();
+}
+
+function clearAllCheckedWords() {
+    checkedWords = [];
+
+    saveCheckedWords();
+    renderCheckedWords();
+    updateStudyBookmark();
+}
+
+function openGroupSelect(mode) {
+    selectedMode = mode;
+
+    hideAllScreens();
+    document.getElementById("groupScreen").classList.remove("hidden");
+
+    if (mode === "quiz") {
+        document.getElementById("groupTitle").textContent = "문제 그룹 선택";
+    } else if (mode === "study") {
+        document.getElementById("groupTitle").textContent = "학습 그룹 선택";
+    } else {
+        document.getElementById("groupTitle").textContent = "≡";
+    }
+}
+
+
+function selectGroup(group) {
+    selectedGroup = group;
+
+    if (selectedMode === "quiz") {
+        openQuiz();
+
+    } else if (selectedMode === "study") {
+
+        if (selectedGroup === "ALL") {
+            studyWords = shuffle(words);
+        } else {
+            studyWords = shuffle(
+                words.filter(
+                    word => word.group === selectedGroup
+                )
+            );
+        }
+
+        studyIndex = 0;
+
+        openStudy();
+    }
+}
+
+let wordListPage = 0;
+const WORDS_PER_PAGE = 18;
+
+function openWordList() {
+
+    hideAllScreens();
+
+    document
+        .getElementById("wordListScreen")
+        .classList.remove("hidden");
+
+    wordListPage = 0;
+
+    renderWordList();
+}
+
+function renderWordList() {
+
+    const list =
+        document.getElementById("wordList");
+
+    const title =
+        document.getElementById("wordListTitle");
+
+    const groupWords =
+        selectedGroup === "ALL"
+            ? words
+            : words.filter(
+            word => word.group === selectedGroup
+        );
+
+    const start =
+        wordListPage * WORDS_PER_PAGE;
+
+    const pageWords =
+        groupWords.slice(
+            start,
+            start + WORDS_PER_PAGE
+        );
+
+    const totalPages =
+        Math.ceil(
+            groupWords.length / WORDS_PER_PAGE
+        );
+
+    title.textContent =
+        selectedGroup === "ALL"
+            ? "전체 단어"
+            : selectedGroup + " 전체 단어";
+        list.innerHTML = "";
+
+        pageWords.forEach(word => {
+
+        const item =
+            document.createElement("div");
+
+        item.className =
+            "word-list-item";
+
+        item.innerHTML =
+            `<div class="word-list-kanji">
+                ${word.kanji}
+             </div>
+
+             <div class="word-list-reading">
+                ${word.yomigana}
+             </div>
+
+             <div class="word-list-meaning">
+                ${word.meaning}
+             </div>`;
+
+        list.appendChild(item);
+    });
+
+    document
+        .getElementById("wordListPage")
+        .textContent =
+        (wordListPage + 1)
+        + " / "
+        + totalPages;
+}
+
+
+function prevWordList() {
+
+    if (wordListPage > 0) {
+
+        wordListPage--;
+
+    } else {
+
+        const groupWords =
+            selectedGroup === "ALL"
+                ? words
+                : words.filter(
+                    word => word.group === selectedGroup
+                );
+
+        const totalPages =
+            Math.ceil(
+                groupWords.length / WORDS_PER_PAGE
+            );
+
+        wordListPage = totalPages - 1;
+    }
+
+    renderWordList();
+}
+
+
+function nextWordList() {
+
+    const groupWords =
+        selectedGroup === "ALL"
+            ? words
+            : words.filter(
+                word => word.group === selectedGroup
+            );
+
+    const totalPages =
+        Math.ceil(
+            groupWords.length / WORDS_PER_PAGE
+        );
+
+    if (wordListPage < totalPages - 1) {
+
+        wordListPage++;
+
+    } else {
+
+        wordListPage = 0;
+    }
+
+    renderWordList();
+}
+
+function returnToStudy() {
+
+    hideAllScreens();
+
+    document
+        .getElementById("studyScreen")
+        .classList.remove("hidden");
+
+    showStudyWord();
+
+    updateStudyBookmark();
+}
+
+</script>
+
+</body>
+</html>
